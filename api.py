@@ -7,7 +7,7 @@ import BackPropagation as bp
 
 
 app = Flask(__name__)
-CORS(app)
+CORS(app,supports_credentials=True)
 
 
 @app.route('/upload', methods=['GET','POST'])

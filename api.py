@@ -16,8 +16,9 @@ def index():
         f = request.files['file']
         fName = f.filename
         f.save(os.path.join(app.instance_path,secure_filename(fName)))
+        dataset = pd.read_excel(f)
         session['file-name'] = fName
-        session['input-para'] = 25
+        session['input-para'] = dataset.values[0].size - 5 - 1
         session['output-para'] = 5
         print(vars(session))
         return "File Uploaded Successfully"
@@ -60,7 +61,7 @@ def setControlData():
         if ta == "bp":
             x = output_para
             while(x>0):
-                bp.BackProp(x,output_para,input_para,f,100,100,tf)
+                bp.BackProp(x,output_para,input_para,f,100,int(neurons),tf)
                 x-=1
 
         return "Model Trained"
@@ -106,13 +107,22 @@ def predict():
     if request.method == 'POST':
         if 'file-name' in session:
             fileName = session['file-name']
+        if 'input-para' in session:
+            input_para = session['input-para']
         if 'output-para' in session:
             output_para = session['output-para']
         
         print(session['file-name'])
         
         f = os.path.abspath("instance/"+fileName)
+        data_xls = pd.read_excel(f)
+        cols_input = data_xls.columns[1 + output_para: 1 + output_para + input_para]
+
         arr = []
+        for col in cols_input:
+            arr.append(float(request.form[col]))
+        
+        print(arr)
         result = []
 
         ta = session["ta"]
@@ -120,10 +130,12 @@ def predict():
         if ta == "bp":
             x = output_para
             while(x>0):
-                result.append(bp.predict(arr,x,f))
+                result.append((bp.predict(arr,x,f)))
                 x-=1
-
-        return jsonify(result.reverse())
+        print(result)
+        print(result[::-1])
+        return jsonify(result[::-1])
+        # return "Done"
     return "Method is not supported"
 
 

@@ -4,11 +4,14 @@ import os, json
 from werkzeug.utils import secure_filename
 from flask_cors import CORS
 import BackPropagation as bp
+from rq import Queue
+from worker import conn
 
 
 app = Flask(__name__)
 CORS(app,supports_credentials=True)
 app.secret_key = "sjfdxcvbfd,mxhfm vhsdlxj,fhsj"
+q = Queue(connection=conn)
 
 @app.route('/upload', methods=['GET','POST'])
 def index():
@@ -58,11 +61,9 @@ def setControlData():
         session["neurons"] = neurons
 
         f = os.path.abspath("instance/"+fileName)
+        
         if ta == "bp":
-            x = output_para
-            while(x>0):
-                bp.BackProp(x,output_para,input_para,f,100,int(neurons),tf)
-                x-=1
+            q.enqueue(train(output_para,input_para,f,neurons,tf),'http://heroku.com')
 
         return "Model Trained"
     return "Method is not supported"
@@ -137,6 +138,12 @@ def predict():
         return jsonify(result[::-1])
         # return "Done"
     return "Method is not supported"
+
+def train(output_para,input_para,f,neurons,tf):
+    x = output_para
+    while(x>0):
+        bp.BackProp(x,output_para,input_para,f,100,int(neurons),tf)
+        x-=1
 
 
 if __name__ == '__main__':

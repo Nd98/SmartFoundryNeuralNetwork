@@ -8,7 +8,7 @@ import BackPropagation as bp
 
 app = Flask(__name__)
 CORS(app,supports_credentials=True)
-
+app.secret_key = os.urandom(24)
 
 @app.route('/upload', methods=['GET','POST'])
 def index():
@@ -140,5 +140,4 @@ def predict():
 
 
 if __name__ == '__main__':
-    app.secret_key = os.urandom(24)
     app.run(host='0.0.0.0',debug=True)

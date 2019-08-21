@@ -141,4 +141,8 @@ def predict():
 
 if __name__ == '__main__':
     app.secret_key = os.urandom(24)
+<<<<<<< HEAD
     app.run(host='0.0.0.0',debug=True)
+=======
+    app.run(debug=True)
+>>>>>>> 80d8ec9ccc5b89512ec29a2f1360af5c89a76d51

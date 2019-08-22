@@ -257,8 +257,8 @@
     <script>
         function getParam(){
             $.ajax({
-                url: "http://127.0.0.1:5000/getParam",
-                // url: "https://sleepy-inlet-18722.herokuapp.com/getParam",
+                // url: "http://127.0.0.1:5000/getParam",
+                url: "https://sleepy-inlet-18722.herokuapp.com/getParam",
                 type: 'POST',
                 xhrFields:{
                     'withCredentials': true
@@ -292,8 +292,8 @@
             var formData = new FormData(this);
             
             $.ajax({
-                url: "http://127.0.0.1:5000/predict",
-                // url: "https://sleepy-inlet-18722.herokuapp.com/predict",
+                // url: "http://127.0.0.1:5000/predict",
+                url: "https://sleepy-inlet-18722.herokuapp.com/predict",
                 type: 'POST',
                 data: formData,
                 xhrFields:{
@@ -319,7 +319,8 @@
 
             var poller = function(){
                 $.ajax({
-                url: "http://127.0.0.1:5000/results/" + data,
+                // url: "http://127.0.0.1:5000/results/" + data,
+                url: "https://sleepy-inlet-18722.herokuapp.com/results/" + data,
                 type: 'GET',
                 xhrFields:{
                     'withCredentials': true,

@@ -198,8 +198,8 @@
         
         function getNeurons(){
             $.ajax({
-                url: "http://127.0.0.1:5000/neurons",
-                // url: "https://sleepy-inlet-18722.herokuapp.com/neurons",
+                // url: "http://127.0.0.1:5000/neurons",
+                url: "https://sleepy-inlet-18722.herokuapp.com/neurons",
                 type: 'POST',
                 xhrFields:{
                     'withCredentials': true
@@ -229,8 +229,8 @@
             var formData = new FormData(this);
 
             $.ajax({
-                url: "http://127.0.0.1:5000/controlData",
-                // url: "https://sleepy-inlet-18722.herokuapp.com/controlData",
+                // url: "http://127.0.0.1:5000/controlData",
+                url: "https://sleepy-inlet-18722.herokuapp.com/controlData",
                 type: 'POST',
                 data: formData,
                 xhrFields:{
@@ -255,7 +255,8 @@
 
             var poller = function(){
                 $.ajax({
-                url: "http://127.0.0.1:5000/results/" + data,
+                // url: "http://127.0.0.1:5000/results/" + data,
+                url: "https://sleepy-inlet-18722.herokuapp.com/results/" + data,
                 type: 'GET',
                 xhrFields:{
                     'withCredentials': true,

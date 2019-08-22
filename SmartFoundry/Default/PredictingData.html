@@ -334,7 +334,7 @@
                         var inp = $('.output').toArray()
                         inp.forEach((element,index) => {
                             var p = element.firstChild.getAttribute("placeholder")
-                            element.firstChild.setAttribute("value",p + "= " + data[index].toFixed(2))
+                            element.firstChild.setAttribute("value",p + " = " + data[index].toFixed(2))
                         });
                         $('#showOutput').show()
                         clearTimeout(timeout)

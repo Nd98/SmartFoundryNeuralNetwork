@@ -152,6 +152,7 @@
     <!--<script src="js/waypoints.min.js"></script>-->
     <script src="../js/jquery.counterup.min.js"></script>
     <script src="../js/script.js"></script>
+	<script src="../js/api.js"></script>
 
 
     
@@ -228,7 +229,7 @@
 
             $.ajax({
                 // url: "http://127.0.0.1:5000/upload",
-                url: "https://sleepy-inlet-18722.herokuapp.com/upload",
+                url: url + "/upload",
                 type: 'POST',
                 data: formData,
                 xhrFields:{

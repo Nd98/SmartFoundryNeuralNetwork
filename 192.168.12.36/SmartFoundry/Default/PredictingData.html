@@ -252,13 +252,14 @@
     <!--<script src="js/waypoints.min.js"></script>-->
     <script src="../js/jquery.counterup.min.js"></script>
     <script src="../js/script.js"></script>
+	<script src="../js/api.js"></script>
 
 
     <script>
         function getParam(){
             $.ajax({
                 // url: "http://127.0.0.1:5000/getParam",
-                url: "https://sleepy-inlet-18722.herokuapp.com/getParam",
+                url: url + "/getParam",
                 type: 'POST',
                 xhrFields:{
                     'withCredentials': true
@@ -293,7 +294,7 @@
             
             $.ajax({
                 // url: "http://127.0.0.1:5000/predict",
-                url: "https://sleepy-inlet-18722.herokuapp.com/predict",
+                url: url + "/predict",
                 type: 'POST',
                 data: formData,
                 xhrFields:{
@@ -320,7 +321,7 @@
             var poller = function(){
                 $.ajax({
                 // url: "http://127.0.0.1:5000/results/" + data,
-                url: "https://sleepy-inlet-18722.herokuapp.com/results/" + data,
+                url: url + "/results/" + data,
                 type: 'GET',
                 xhrFields:{
                     'withCredentials': true,

@@ -11,7 +11,6 @@ import os
 import tensorflow as tf
 
 
-sc_array = []
 graph = tf.get_default_graph()
 
 def BackProp(col_predict,no_of_output_para,input_par,link,epoch,units,tf):
@@ -29,8 +28,6 @@ def BackProp(col_predict,no_of_output_para,input_par,link,epoch,units,tf):
         sc = StandardScaler()
         X_train = sc.fit_transform(X_train)
         X_test = sc.transform(X_test)
-
-        sc_array.append(sc)
 
         classifier = Sequential()
 
@@ -55,14 +52,25 @@ def BackProp(col_predict,no_of_output_para,input_par,link,epoch,units,tf):
 
         joblib.dump(classifier,link+"-"+str(col_predict)+".pkl")
 
+        return sc
 
-def predict(arr,col_predict,link):
+
+def predict(arr,col_predict,link,no_of_output_para):
 
     global graph
     with graph.as_default():
-        # print(arr)
-        # print(col_predict)
-        # print(link)
+        
+        dataset = pd.read_excel(link)
+        X = dataset.iloc[:,no_of_output_para + 1:dataset.values[0].size].values
+        y = dataset.iloc[:,col_predict].values
+
+
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 0)
+
+
+        sc = StandardScaler()
+        X_train = sc.fit_transform(X_train)
+        X_test = sc.transform(X_test)
         classifier = joblib.load(link+"-"+str(col_predict)+".pkl")
 
         # y_pred = classifier.predict(X_test)
@@ -74,11 +82,11 @@ def predict(arr,col_predict,link):
 
         p = np.array([arr])
         
-
-        sc = sc_array[col_predict-1] #Make changes
         p = sc.transform(p)
         p = classifier.predict(p)
         return p.tolist()[0][0]
+
+
 
 # no_of_output_para = 5
 # input_par = 25

@@ -199,6 +199,7 @@
         function getNeurons(){
             $.ajax({
                 url: "http://127.0.0.1:5000/neurons",
+                // url: "https://sleepy-inlet-18722.herokuapp.com/neurons",
                 type: 'POST',
                 xhrFields:{
                     'withCredentials': true
@@ -229,6 +230,7 @@
 
             $.ajax({
                 url: "http://127.0.0.1:5000/controlData",
+                // url: "https://sleepy-inlet-18722.herokuapp.com/controlData",
                 type: 'POST',
                 data: formData,
                 xhrFields:{
@@ -236,8 +238,7 @@
                 },
                 crossDomain:true,
                 success: function (data) {
-                    console.log(data)
-                    document.getElementById("status").innerHTML = data
+                    poll(data)
                 },
                 error: function(data){
                     console.log("Something Went Wrong")
@@ -248,6 +249,40 @@
                 processData: false
             });
         });
+
+        function poll(data){
+            var timeout = ""
+
+            var poller = function(){
+                $.ajax({
+                url: "http://127.0.0.1:5000/results/" + data,
+                type: 'GET',
+                xhrFields:{
+                    'withCredentials': true,
+                },
+                crossDomain:true,
+                success: function(data,status){
+                    // console.log(data)
+                    if(data !== "202"){
+                        document.getElementById("status").innerHTML = "Model Trained"
+                        clearTimeout(timeout)
+                        return false
+                    }
+                    document.getElementById("status").innerHTML = "Training..."
+                    timeout = setTimeout(poller,5000)
+                },
+                error: function(data){
+                    console.log(data)
+                    document.getElementById("status").innerHTML = "Something Went Wrong"
+                },
+                cache: false,
+                contentType: false,
+                processData: false
+            })
+        }
+        poller();
+    }
+
     </script>
 
     

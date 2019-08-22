@@ -1,17 +1,19 @@
 from flask import Flask, request, jsonify, session
 import pandas as pd
-import os, json
+import os, json, time
 from werkzeug.utils import secure_filename
 from flask_cors import CORS
-import BackPropagation as bp
+from utils import prediction,train
 from rq import Queue
+from rq.job import Job
 from worker import conn
 
-
 app = Flask(__name__)
+CORS(app)
 CORS(app,supports_credentials=True)
 app.secret_key = "sjfdxcvbfd,mxhfm vhsdlxj,fhsj"
-q = Queue(connection=conn)
+q = Queue('low',connection=conn)
+sc_array = []
 
 @app.route('/upload', methods=['GET','POST'])
 def index():
@@ -63,10 +65,20 @@ def setControlData():
         f = os.path.abspath("instance/"+fileName)
         
         if ta == "bp":
-            q.enqueue(train(output_para,input_para,f,neurons,tf),'http://heroku.com')
+           job = q.enqueue(train,output_para,input_para,f,neurons,tf)
+           return job.get_id()
 
-        return "Model Trained"
     return "Method is not supported"
+
+@app.route("/results/<job_key>", methods=['GET'])
+def get_results(job_key):
+
+    job = Job.fetch(job_key, connection=conn)
+
+    if job.is_finished: 
+        return jsonify(job.result)
+    else:
+        return "202"
 
 @app.route('/getParam', methods=['POST'])
 def getParam():
@@ -124,26 +136,15 @@ def predict():
             arr.append(float(request.form[col]))
         
         print(arr)
-        result = []
 
         ta = session["ta"]
 
         if ta == "bp":
-            x = output_para
-            while(x>0):
-                result.append((bp.predict(arr,x,f)))
-                x-=1
-        print(result)
-        print(result[::-1])
-        return jsonify(result[::-1])
-        # return "Done"
+            job = q.enqueue(prediction,arr,output_para,f,output_para)
+            return job.get_id()          
+
     return "Method is not supported"
 
-def train(output_para,input_para,f,neurons,tf):
-    x = output_para
-    while(x>0):
-        bp.BackProp(x,output_para,input_para,f,100,int(neurons),tf)
-        x-=1
 
 
 if __name__ == '__main__':

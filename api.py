@@ -64,9 +64,8 @@ def setControlData():
 
         f = os.path.abspath("instance/"+fileName)
         
-        if ta == "bp":
-           job = q.enqueue(train,output_para,input_para,f,neurons,tf)
-           return job.get_id()
+        job = q.enqueue(train,output_para,input_para,f,neurons,tf,ta)
+        return job.get_id()
 
     return "Method is not supported"
 
@@ -139,11 +138,8 @@ def predict():
         
         print(arr)
 
-        ta = session["ta"]
-
-        if ta == "bp":
-            job = q.enqueue(prediction,arr,output_para,f,output_para)
-            return job.get_id()          
+        job = q.enqueue(prediction,arr,output_para,f,output_para)
+        return job.get_id()          
 
     return "Method is not supported"
 

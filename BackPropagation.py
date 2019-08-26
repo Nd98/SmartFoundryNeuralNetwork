@@ -9,6 +9,8 @@ from sklearn.model_selection import train_test_split
 import joblib
 import os
 import tensorflow as tf
+from neupy import algorithms
+from neupy.layers import *
 
 
 graph = tf.get_default_graph()
@@ -61,7 +63,66 @@ def BackProp(col_predict,no_of_output_para,input_par,link,epoch,units,tf):
 
         joblib.dump(classifier,link+"-"+str(col_predict)+".pkl")
 
-        return sc
+
+def QuasiNewton(col_predict,no_of_output_para,input_par,link,epoch,units,tf):
+    global graph
+    with graph.as_default():
+
+        dataset=pd.read_excel(link)
+
+        #check for empty column
+        cols_out = dataset.columns[col_predict:col_predict+1]
+        for col in cols_out:
+                if "Unnamed" in col:
+                        return 0
+        
+        X=dataset.iloc[:,no_of_output_para + 1:dataset.values[0].size].values
+        Y=dataset.iloc[:,col_predict].values
+
+        X_train = np.array(X)
+        y_train = np.array(Y)
+        X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size = 0.2, random_state = 0)
+
+        sc = StandardScaler()
+        X_train = sc.fit_transform(X_train)
+        X_test = sc.transform(X_test)
+
+        network = Input(input_par) >> Sigmoid(units) >> Relu(1)
+        optimizer = algorithms.QuasiNewton([network],update_function='bfgs',verbose=False,shuffle_data=False)
+
+        optimizer.train(X_train, y_train, epochs=epoch)
+
+        joblib.dump(optimizer,link+"-"+str(col_predict)+".pkl")
+
+def LevenbergMarquardt(col_predict,no_of_output_para,input_par,link,epoch,units,tf):
+    global graph
+    with graph.as_default():
+
+        dataset=pd.read_excel(link)
+
+        #check for empty column
+        cols_out = dataset.columns[col_predict:col_predict+1]
+        for col in cols_out:
+                if "Unnamed" in col:
+                        return 0
+        
+        X=dataset.iloc[:,no_of_output_para + 1:dataset.values[0].size].values
+        Y=dataset.iloc[:,col_predict].values
+
+        X_train = np.array(X)
+        y_train = np.array(Y)
+        X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size = 0.2, random_state = 0)
+
+        sc = StandardScaler()
+        X_train = sc.fit_transform(X_train)
+        X_test = sc.transform(X_test)
+
+        network = Input(input_par) >> Sigmoid(units) >> Relu(1)
+        optimizer = algorithms.LevenbergMarquardt([network],verbose=False,shuffle_data=False)
+
+        optimizer.train(X_train, y_train, epochs=epoch)
+
+        joblib.dump(optimizer,link+"-"+str(col_predict)+".pkl")
 
 
 def predict(arr,col_predict,link,no_of_output_para):

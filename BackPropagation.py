@@ -75,9 +75,9 @@ def predict(arr,col_predict,link,no_of_output_para):
         cols_out = dataset.columns[col_predict:col_predict+1]
         for col in cols_out:
                 if "Unnamed" in col:
-                        return 0
+                        return None
 
-        
+
         X = dataset.iloc[:,no_of_output_para + 1:dataset.values[0].size].values
         y = dataset.iloc[:,col_predict].values
 

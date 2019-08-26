@@ -11,7 +11,9 @@ def prediction(arr,output_para,f,no_of_output_para):
     result = []
     x = output_para
     while(x>0):
-        result.append(bp.predict(arr,x,f,no_of_output_para))
+        r = bp.predict(arr,x,f,no_of_output_para)
+        if r != None:
+            result.append(r)
         x-=1
     print(result)
     return result[::-1]

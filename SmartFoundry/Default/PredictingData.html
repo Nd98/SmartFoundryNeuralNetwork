@@ -330,7 +330,7 @@
                 success: function(data,status){
                     console.log(data)
                     if(data !== "202"){
-                        document.getElementById("status").innerHTML = "Done...See the Results"
+                        document.getElementById("status").innerHTML = ""
                         var inp = $('.output').toArray()
                         inp.forEach((element,index) => {
                             var p = element.firstChild.getAttribute("placeholder")

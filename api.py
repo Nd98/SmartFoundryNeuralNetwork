@@ -24,8 +24,8 @@ def index():
         dataset = pd.read_excel(f)
         session['file-name'] = fName
         session['input-para'] = dataset.values[0].size - 5 - 1
-        session['output-para'] = 5
-        print(vars(session))
+        session['output-para'] = 5 #maximum value
+        # print(vars(session))
         return "File Uploaded Successfully"
     return "Method is not supported"
 
@@ -75,6 +75,8 @@ def get_results(job_key):
 
     job = Job.fetch(job_key, connection=conn)
 
+    print(vars(job))
+
     if job.is_finished: 
         return jsonify(job.result)
     else:
@@ -96,7 +98,7 @@ def getParam():
         f = os.path.abspath("instance/"+fileName)
         
         data_xls = pd.read_excel(f)
-        cols_input = data_xls.columns[1 + output_para: 1 + output_para + input_para]
+        cols_input = data_xls.columns[1 + 5: 1 + 5 + input_para]
         cols_output = data_xls.columns[1:output_para+1]
         arr1 = []
         arr2 = []
@@ -104,6 +106,8 @@ def getParam():
         for col in cols_input:
             arr1.append(col)
         for col in cols_output:
+            if "Unnamed" in col:
+                continue
             arr2.append(col)
         
         arr = []

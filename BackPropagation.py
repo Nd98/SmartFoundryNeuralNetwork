@@ -18,6 +18,15 @@ def BackProp(col_predict,no_of_output_para,input_par,link,epoch,units,tf):
     global graph
     with graph.as_default():
         dataset = pd.read_excel(link)
+
+        #check for empty column
+        cols_out = dataset.columns[col_predict:col_predict+1]
+        for col in cols_out:
+                if "Unnamed" in col:
+                        return 0
+
+
+
         X = dataset.iloc[:,no_of_output_para + 1:dataset.values[0].size].values
         y = dataset.iloc[:,col_predict].values
 
@@ -61,6 +70,14 @@ def predict(arr,col_predict,link,no_of_output_para):
     with graph.as_default():
         
         dataset = pd.read_excel(link)
+
+        #check for empty column
+        cols_out = dataset.columns[col_predict:col_predict+1]
+        for col in cols_out:
+                if "Unnamed" in col:
+                        return 0
+
+        
         X = dataset.iloc[:,no_of_output_para + 1:dataset.values[0].size].values
         y = dataset.iloc[:,col_predict].values
 

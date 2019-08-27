@@ -96,7 +96,7 @@
                     <div class="form-group">
                         <label>Training Algorithm</label>
                         <div class="inpt">
-                            <select name="ta">
+                            <select name="ta" id="ta">
                                 <option>Select</option>
                                 <option value="bp">Back Propogation</option>
                                 <option value="lm">Levenburg Markquardt</option>
@@ -108,10 +108,8 @@
                     <div class="form-group">
                         <label>Transfer Function</label>
                         <div class="inpt">
-                            <select name="tf">
+                            <select name="tf" id="tf">
                                 <option>Select</option>
-                                <option value="relu">Relu</option>
-                                <option value="sigmoid">Sigmoid</option>
                             </select>
                         </div>
                     </div>
@@ -193,6 +191,57 @@
 	<script src="../js/api.js"></script>
 
     <script>
+
+        var select = $("#tf");
+        
+        if(select.children.length > 1){
+            $('#tf').children().slice(1).remove()
+        }
+
+        $(document).ready(function(){
+
+            $("select#ta").change(function(){
+                var selectedta = $(this).children("option:selected").val();
+                var select = $("#tf");
+                
+                if(select.children.length > 1){
+                    select.children().slice(1).remove()
+                }
+
+                if(selectedta == "bp"){
+                    var array = ["relu","sigmoid"]
+                    array.forEach(element => {
+                        var opt = $("<option></option");
+                        opt.val(element);
+                        opt.html(element);
+                        select.append(opt)
+                    });
+                    
+                }
+
+                else if(selectedta == "lm"){
+                    var array = ["relu-sigmoid"]
+                    array.forEach(element => {
+                        var opt = $("<option></option");
+                        opt.val(element);
+                        opt.html(element);
+                        select.append(opt)
+                    });
+                }
+
+                else if(selectedta == "qn"){
+                    var array = ["relu-sigmoid"]
+                    array.forEach(element => {
+                        var opt = $("<option></option");
+                        opt.val(element);
+                        opt.html(element);
+                        select.append(opt)
+                    });
+                }
+        
+            });
+
+        });
 
 
         var select = $("#neurons");

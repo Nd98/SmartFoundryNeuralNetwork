@@ -265,7 +265,7 @@
                     }
                 },
                 error: function(data){
-                    console.log("Something Went Wrong")
+                    console.log(data.statusText)
                 },
                 cache: false,
                 contentType: false,
@@ -291,7 +291,7 @@
                     poll(data)
                 },
                 error: function(data){
-                    console.log("Something Went Wrong")
+                    console.log(data.statusText)
                     document.getElementById("status").innerHTML = "Something Went Wrong"
                 },
                 cache: false,
@@ -314,6 +314,11 @@
                 crossDomain:true,
                 success: function(data,status){
                     // console.log(data)
+					if(data === "400"){
+                        document.getElementById("status").innerHTML = "Something Went Wrong<br/>Please Check Form Values or Contact The Admin"
+                        clearTimeout(timeout)
+                        return false
+                    }
                     if(data !== "202"){
                         document.getElementById("status").innerHTML = "Model Trained"
                         clearTimeout(timeout)
@@ -323,7 +328,7 @@
                     timeout = setTimeout(poller,5000)
                 },
                 error: function(data){
-                    console.log(data)
+                    console.log(data.statusText)
                     document.getElementById("status").innerHTML = "Something Went Wrong"
                 },
                 cache: false,

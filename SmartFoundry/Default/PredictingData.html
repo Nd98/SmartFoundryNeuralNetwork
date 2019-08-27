@@ -197,7 +197,7 @@
                     });
                 },
                 error: function(data){
-                    console.log("Something Went Wrong")
+                    console.log(data.statusText)
                 },
                 cache: false,
                 contentType: false,
@@ -215,9 +215,13 @@
 
             var parent = document.createElement('div');
             parent.className = "form-group"
+			
+			var colorArr = ["#ade6bb","#eeacac","#cdcdcd","#b1d9e9","#dbceeb"];
 
             var inp = document.createElement('input');
             inp.style.textAlign = "center"
+			inp.style.backgroundColor = type == "output" ? colorArr[length-1] : "#fff";
+			inp.style.fontWeight = type == "output" ? "bold" : "";
             type=="output" ? inp.setAttribute("readonly", true) : null
 
             var label = document.createElement('label');
@@ -264,16 +268,20 @@
 
                     midChild = 0
                 }
+				
+				length-=1
 
                 inp = document.createElement('input');
                 inp.style.textAlign = "center"
+				inp.style.backgroundColor = type == "output" ? colorArr[length-1] : "#fff";
+				inp.style.fontWeight = type == "output" ? "bold" : "";
                 type=="output" ? inp.setAttribute("readonly", true) : null
                 
 
                 colMd6 = document.createElement('div');
                 colMd6.className = "col-md-6 " + type
 
-                length-=1
+
 
             }
 
@@ -306,7 +314,7 @@
                     poll(data)
                 },
                 error: function(data){
-                    console.log("Something Went Wrong")
+                    console.log(data.statusText)
                     document.getElementById("status").innerHTML = "Something Went Wrong"
                 },
                 cache: false,
@@ -328,7 +336,11 @@
                 },
                 crossDomain:true,
                 success: function(data,status){
-                    console.log(data)
+					if(data === "400"){
+                        document.getElementById("status").innerHTML = "Something Went Wrong<br/>Please Check Form Values or Contact The Admin"
+                        clearTimeout(timeout)
+                        return false
+                    }
                     if(data !== "202"){
                         document.getElementById("status").innerHTML = ""
                         var inp = $('.output').toArray()

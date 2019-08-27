@@ -74,8 +74,13 @@ def get_results(job_key):
 
     job = Job.fetch(job_key, connection=conn)
 
+    print(job._status)
     if job.is_finished: 
+        job.delete()
         return jsonify(job.result)
+    elif job._status in "failed":
+        job.delete()
+        return "400"
     else:
         return "202"
 

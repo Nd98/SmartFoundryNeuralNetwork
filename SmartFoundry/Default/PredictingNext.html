@@ -101,6 +101,7 @@
                                 <option value="bp">Back Propogation</option>
                                 <option value="lm">Levenburg Markquardt</option>
                                 <option value="qn">Quasi Newton</option>
+                                <option value="ma">Momentum Adaptation</option>
                             </select>
                         </div>
                     </div>
@@ -209,7 +210,7 @@
                 }
 
                 if(selectedta == "bp"){
-                    var array = ["relu","sigmoid"]
+                    var array = ["relu","sigmoid","elu"]
                     array.forEach(element => {
                         var opt = $("<option></option");
                         opt.val(element);
@@ -230,6 +231,16 @@
                 }
 
                 else if(selectedta == "qn"){
+                    var array = ["relu-sigmoid"]
+                    array.forEach(element => {
+                        var opt = $("<option></option");
+                        opt.val(element);
+                        opt.html(element);
+                        select.append(opt)
+                    });
+                }
+
+                else if(selectedta == "ma"){
                     var array = ["relu-sigmoid"]
                     array.forEach(element => {
                         var opt = $("<option></option");

@@ -23,6 +23,13 @@ def train(output_para,input_para,f,neurons,tf,ta):
             x-=1
         return "Model Trained"
 
+    elif ta == "ma":
+        x = output_para
+        while(x>0):
+            (bp.MomentumAdaptation(x,output_para,input_para,f,100,int(neurons),tf))
+            x-=1
+        return "Model Trained"
+
 def prediction(arr,output_para,f,no_of_output_para):
     result = []
     x = output_para

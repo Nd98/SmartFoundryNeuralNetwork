@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, session
+from flask import Flask, request, jsonify, session, url_for
 import pandas as pd
 import os, json, time
 from werkzeug.utils import secure_filename
@@ -15,8 +15,12 @@ app.secret_key = "sjfdxcvbfd,mxhfm vhsdlxj,fhsj"
 q = Queue('low',connection=conn)
 sc_array = []
 
-@app.route('/upload', methods=['GET','POST'])
+@app.route("/api")
 def index():
+    return "The URL for this page is {}".format(url_for("index"))
+
+@app.route('/api/upload', methods=['GET','POST'])
+def upload():
     if request.method == 'POST':
         f = request.files['file']
         fName = f.filename
@@ -29,7 +33,7 @@ def index():
         return "File Uploaded Successfully"
     return "Method is not supported"
 
-@app.route('/neurons', methods=['POST'])
+@app.route('/api/neurons', methods=['POST'])
 def getNeurons():
     fileName = ""
     if request.method == 'POST':
@@ -42,7 +46,7 @@ def getNeurons():
         return jsonify(input_para)
     return "Method is not supported"
 
-@app.route('/controlData', methods=['POST'])
+@app.route('/api/controlData', methods=['POST'])
 def setControlData():
     fileName = ""
     if request.method == 'POST':
@@ -69,7 +73,7 @@ def setControlData():
 
     return "Method is not supported"
 
-@app.route("/results/<job_key>", methods=['GET'])
+@app.route("/api/results/<job_key>", methods=['GET'])
 def get_results(job_key):
 
     job = Job.fetch(job_key, connection=conn)
@@ -84,7 +88,7 @@ def get_results(job_key):
     else:
         return "202"
 
-@app.route('/getParam', methods=['POST'])
+@app.route('/api/getParam', methods=['POST'])
 def getParam():
     fileName = ""
     if request.method == 'POST':
@@ -120,7 +124,7 @@ def getParam():
         
     return "Method is not supported"
 
-@app.route('/predict', methods=['POST'])
+@app.route('/api/predict', methods=['POST'])
 def predict():
     fileName = ""
     if request.method == 'POST':

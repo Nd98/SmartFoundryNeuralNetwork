@@ -1,2 +1,2 @@
-url1 = "http://54.224.242.27"
-url = url1 + ":5000"
+url1 = "http://127.0.0.1/api/"
+url = url1

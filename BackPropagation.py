@@ -1,4 +1,5 @@
 import numpy as np
+np.random.seed(42)
 import matplotlib.pyplot as plt
 import pandas as pd
 import keras
@@ -9,11 +10,20 @@ from sklearn.model_selection import train_test_split
 import joblib
 import os
 import tensorflow as tf
+tf.set_random_seed(42)
 from neupy import algorithms
 from neupy.layers import *
+import os
+import random as rn
+
+os.environ['PYTHONHASHSEED'] = '42'
+rn.seed(42)
+
+session_conf = tf.ConfigProto(intra_op_parallelism_threads=1, inter_op_parallelism_threads=1)
 
 
-graph = tf.get_default_graph()
+
+graph = tf.Session(graph=tf.get_default_graph(), config=session_conf)
 
 def BackProp(col_predict,no_of_output_para,input_par,link,epoch,units,tf):
 
@@ -31,7 +41,6 @@ def BackProp(col_predict,no_of_output_para,input_par,link,epoch,units,tf):
 
         X = dataset.iloc[:,no_of_output_para + 1:dataset.values[0].size].values
         y = dataset.iloc[:,col_predict].values
-        np.random.seed(0)
 
 
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 0)
@@ -40,6 +49,8 @@ def BackProp(col_predict,no_of_output_para,input_par,link,epoch,units,tf):
         sc = StandardScaler()
         X_train = sc.fit_transform(X_train)
         X_test = sc.transform(X_test)
+
+        # np.random.seed(0)
 
         classifier = Sequential()
 
@@ -79,7 +90,7 @@ def QuasiNewton(col_predict,no_of_output_para,input_par,link,epoch,units,tf):
         
         X=dataset.iloc[:,no_of_output_para + 1:dataset.values[0].size].values
         Y=dataset.iloc[:,col_predict].values
-        np.random.seed(0)
+        # np.random.seed(0)
 
         X_train = np.array(X)
         y_train = np.array(Y)
@@ -89,7 +100,7 @@ def QuasiNewton(col_predict,no_of_output_para,input_par,link,epoch,units,tf):
         X_train = sc.fit_transform(X_train)
         X_test = sc.transform(X_test)
 
-        network = Input(input_par) >> Sigmoid(units) >> Relu(1)
+        network = Input(input_par) >> Sigmoid(int(units/10)+1) >> Relu(1)
         optimizer = algorithms.QuasiNewton([network],update_function='bfgs',verbose=False,shuffle_data=False)
 
         optimizer.train(X_train, y_train, epochs=epoch)
@@ -110,7 +121,7 @@ def LevenbergMarquardt(col_predict,no_of_output_para,input_par,link,epoch,units,
         
         X=dataset.iloc[:,no_of_output_para + 1:dataset.values[0].size].values
         Y=dataset.iloc[:,col_predict].values
-        np.random.seed(0)
+        # np.random.seed(0)
 
         X_train = np.array(X)
         y_train = np.array(Y)
@@ -120,7 +131,7 @@ def LevenbergMarquardt(col_predict,no_of_output_para,input_par,link,epoch,units,
         X_train = sc.fit_transform(X_train)
         X_test = sc.transform(X_test)
 
-        network = Input(input_par) >> Sigmoid(units) >> Relu(1)
+        network = Input(input_par) >> Sigmoid(int(units/10)+1) >> Relu(1)
         optimizer = algorithms.LevenbergMarquardt([network],verbose=False,shuffle_data=False)
 
         optimizer.train(X_train, y_train, epochs=epoch)
@@ -142,7 +153,7 @@ def MomentumAdaptation(col_predict,no_of_output_para,input_par,link,epoch,units,
         
         X=dataset.iloc[:,no_of_output_para + 1:dataset.values[0].size].values
         Y=dataset.iloc[:,col_predict].values
-        np.random.seed(0)
+        # np.random.seed(0)
 
         X_train = np.array(X)
         y_train = np.array(Y)
@@ -152,7 +163,7 @@ def MomentumAdaptation(col_predict,no_of_output_para,input_par,link,epoch,units,
         X_train = sc.fit_transform(X_train)
         X_test = sc.transform(X_test)
 
-        network = Input(input_par) >> Sigmoid(units) >> Relu(1)
+        network = Input(input_par) >> Sigmoid(int(units/10)+1) >> Relu(1)
         optimizer = algorithms.Momentum([network],verbose=False,shuffle_data=False)
 
         optimizer.train(X_train, y_train, epochs=epoch)
@@ -178,7 +189,6 @@ def predict(arr,col_predict,link,no_of_output_para):
 
         X = dataset.iloc[:,no_of_output_para + 1:dataset.values[0].size].values
         y = dataset.iloc[:,col_predict].values
-        np.random.seed(0)
 
 
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 0)

@@ -3,3 +3,6 @@ __pycache__
 *.pyc
 instance
 .vscode
+worker.out
+steps.txt
+server.out

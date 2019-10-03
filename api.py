@@ -119,6 +119,8 @@ def getParam():
         arr = []
         arr.append(arr1)
         arr.append(arr2)
+        arr.append([{"neurons":session["neurons"]}])
+
 
         return jsonify(arr)
         
